@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem dirtParticle;
     public AudioClip jumpSound;
     public AudioClip crashSound;
+    public bool doubleJumpUsed = false;
+    public float doubleJumpForce;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +36,15 @@ public class PlayerController : MonoBehaviour
             isOnGround = false;
             playerAnim.SetTrigger("Jump_trig");
             dirtParticle.Stop();
+            playerAudio.PlayOneShot(jumpSound, 1.0f);
+
+            doubleJumpUsed = false;
+        }
+        else if (Input.GetKeyDown(KeyCode.Space)&&!isOnGround &&!doubleJumpUsed)
+        {
+            doubleJumpUsed = true;
+            playerRb.AddForce(Vector3.up * doubleJumpForce, ForceMode.Impulse);
+            playerAnim.Play("Running_Jump", 3, 0f);
             playerAudio.PlayOneShot(jumpSound, 1.0f);
         }
     }
